@@ -18,7 +18,12 @@ pub struct InitializeConfig<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn init(ctx: Context<InitializeConfig>, start: u64, end: u64, price: u64) -> Result<()> {
+pub(crate) fn handle(
+    ctx: Context<InitializeConfig>,
+    start: u64,
+    end: u64,
+    price: u64,
+) -> Result<()> {
     *ctx.accounts.token_lottery = TokenLottery {
         bump: ctx.bumps.token_lottery,
         winner: 0,

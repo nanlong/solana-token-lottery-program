@@ -23,7 +23,12 @@ pub mod token_lottery {
         end: u64,
         price: u64,
     ) -> Result<()> {
-        instructions::initialize_config::init(ctx, start, end, price)?;
+        instructions::initialize_config::handle(ctx, start, end, price)?;
+        Ok(())
+    }
+
+    pub fn initialize_lottery(ctx: Context<InitializeLottery>) -> Result<()> {
+        instructions::initialize_lottery::handle(ctx)?;
         Ok(())
     }
 }
