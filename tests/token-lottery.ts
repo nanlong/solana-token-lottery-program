@@ -5,6 +5,7 @@ import { PublicKey } from '@solana/web3.js';
 import { confirmTransaction } from '@solana-developers/helpers';
 import { assert } from 'chai';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
 describe('token-lottery', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
