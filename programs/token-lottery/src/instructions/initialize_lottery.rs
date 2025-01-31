@@ -9,12 +9,7 @@ use anchor_spl::{
     token_interface::{mint_to, Mint, MintTo, TokenAccount, TokenInterface},
 };
 
-#[constant]
-const NAME: &str = "Token Lottery Ticker #";
-#[constant]
-const SYMBOL: &str = "TLT";
-#[constant]
-const URI: &str = "https://token-lottery.com/";
+use crate::{NAME, SYMBOL, URI};
 
 #[derive(Accounts)]
 pub struct InitializeLottery<'info> {
@@ -30,7 +25,7 @@ pub struct InitializeLottery<'info> {
         mint::authority = collection_mint,
         mint::freeze_authority = collection_mint,
     )]
-    pub collection_mint: InterfaceAccount<'info, Mint>,
+    pub collection_mint: Box<InterfaceAccount<'info, Mint>>,
 
     #[account(
         init,
@@ -40,7 +35,7 @@ pub struct InitializeLottery<'info> {
         token::mint = collection_mint,
         token::authority = collection_token_account,
     )]
-    pub collection_token_account: InterfaceAccount<'info, TokenAccount>,
+    pub collection_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(
         mut,
@@ -81,7 +76,7 @@ pub(crate) fn handle(ctx: Context<InitializeLottery>) -> Result<()> {
     let seeds = [b"collection_mint".as_ref(), &[ctx.bumps.collection_mint]];
     let signer_seeds = [&seeds[..]];
 
-    msg!("Creating mint account");
+    msg!("Minting token");
     mint_to(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
@@ -128,7 +123,7 @@ pub(crate) fn handle(ctx: Context<InitializeLottery>) -> Result<()> {
         Some(CollectionDetails::V1 { size: 0 }),
     )?;
 
-    msg!("Creating master Edition account");
+    msg!("Creating master edition account");
     create_master_edition_v3(
         CpiContext::new_with_signer(
             ctx.accounts.token_metadata_program.to_account_info(),

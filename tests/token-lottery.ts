@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import { Program, BN } from '@coral-xyz/anchor';
 import { TokenLottery } from '../target/types/token_lottery';
-import { PublicKey } from '@solana/web3.js';
+import { ComputeBudgetProgram, PublicKey } from '@solana/web3.js';
 import { confirmTransaction } from '@solana-developers/helpers';
 import { assert } from 'chai';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -16,7 +16,7 @@ describe('token-lottery', () => {
 
   it('initialize config', async () => {
     const transactionSignature = await program.methods
-      .initializeConfig(new BN(1), new BN(2), new BN(3))
+      .initializeConfig(new BN(0), new BN(999999999), new BN(1))
       .rpc({ skipPreflight: true });
 
     await confirmTransaction(connection, transactionSignature);
@@ -30,9 +30,9 @@ describe('token-lottery', () => {
       tokenLottery
     );
 
-    assert(tokenLotteryAccount.startTime.eq(new BN(1)));
-    assert(tokenLotteryAccount.endTime.eq(new BN(2)));
-    assert(tokenLotteryAccount.ticketPrice.eq(new BN(3)));
+    assert(tokenLotteryAccount.startTime.eq(new BN(0)));
+    assert(tokenLotteryAccount.endTime.eq(new BN(999999999)));
+    assert(tokenLotteryAccount.ticketPrice.eq(new BN(1)));
     assert(tokenLotteryAccount.authority.equals(provider.wallet.publicKey));
     assert(tokenLotteryAccount.randomnessAccount.equals(new PublicKey(0)));
   });
@@ -46,5 +46,25 @@ describe('token-lottery', () => {
       .rpc({ skipPreflight: true });
 
     await confirmTransaction(connection, transactionSignature);
+
+    console.log(transactionSignature);
+  });
+
+  it('buy ticket', async () => {
+    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+      units: 220_000,
+    });
+
+    const transactionSignature = await program.methods
+      .buyTicket()
+      .accounts({
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .preInstructions([modifyComputeUnits])
+      .rpc({ skipPreflight: true });
+
+    await confirmTransaction(connection, transactionSignature);
+
+    console.log(transactionSignature);
   });
 });

@@ -31,4 +31,9 @@ pub mod token_lottery {
         instructions::initialize_lottery::handle(ctx)?;
         Ok(())
     }
+
+    pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {
+        instructions::buy_ticket::handle(ctx)?;
+        Ok(())
+    }
 }

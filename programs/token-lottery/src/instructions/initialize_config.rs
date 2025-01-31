@@ -24,6 +24,7 @@ pub(crate) fn handle(
     end: u64,
     price: u64,
 ) -> Result<()> {
+    msg!("Initializing lottery config");
     *ctx.accounts.token_lottery = TokenLottery {
         bump: ctx.bumps.token_lottery,
         winner: 0,
