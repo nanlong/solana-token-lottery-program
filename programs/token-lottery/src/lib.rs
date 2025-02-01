@@ -41,4 +41,9 @@ pub mod token_lottery {
         instructions::commit_randomness::handle(ctx)?;
         Ok(())
     }
+
+    pub fn reveal_winner(ctx: Context<RevealWinner>) -> Result<()> {
+        instructions::reveal_winner::handle(ctx)?;
+        Ok(())
+    }
 }

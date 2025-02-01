@@ -10,4 +10,16 @@ pub enum ErrorCode {
 
     #[msg("Randomness already revealed")]
     RandomnessAlreadyRevealed,
+
+    #[msg("Incorrect randomness account")]
+    IncorrectRandomnessAccount,
+
+    #[msg("Lottery not completed")]
+    LotteryNotCompleted,
+
+    #[msg("Winner chosen")]
+    WinnerChosen,
+
+    #[msg("Randomness not resolved")]
+    RandomnessNotResolved,
 }

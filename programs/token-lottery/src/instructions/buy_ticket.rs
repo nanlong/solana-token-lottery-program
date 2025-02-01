@@ -120,11 +120,16 @@ pub(crate) fn handle(ctx: Context<BuyTicket>) -> Result<()> {
     let clock = Clock::get()?;
     let ticket_name = format!("{}{}", NAME, ctx.accounts.token_lottery.total_tickets);
 
-    if clock.slot < ctx.accounts.token_lottery.start_time
-        || clock.slot > ctx.accounts.token_lottery.end_time
-    {
-        return Err(ErrorCode::LotteryNotOpen.into());
-    }
+    require_gte!(
+        clock.slot,
+        ctx.accounts.token_lottery.start_time,
+        ErrorCode::LotteryNotOpen,
+    );
+    require_gte!(
+        ctx.accounts.token_lottery.end_time,
+        clock.slot,
+        ErrorCode::LotteryNotOpen,
+    );
 
     msg!("Transferring ticket price");
     system_program::transfer(

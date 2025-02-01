@@ -21,18 +21,22 @@ pub struct CommitRandomness<'info> {
 }
 
 pub(crate) fn handle(ctx: Context<CommitRandomness>) -> Result<()> {
-    if ctx.accounts.payer.key() != ctx.accounts.token_lottery.authority {
-        return Err(ErrorCode::NotAuthorized.into());
-    }
+    require_eq!(
+        ctx.accounts.payer.key(),
+        ctx.accounts.token_lottery.authority,
+        ErrorCode::NotAuthorized,
+    );
 
     let clock = Clock::get()?;
 
     let randomness_data =
         RandomnessAccountData::parse(ctx.accounts.randomness_account.data.borrow()).unwrap();
 
-    if randomness_data.seed_slot != clock.slot - 1 {
-        return Err(ErrorCode::RandomnessAlreadyRevealed.into());
-    }
+    require_eq!(
+        randomness_data.seed_slot,
+        clock.slot - 1,
+        ErrorCode::RandomnessAlreadyRevealed,
+    );
 
     ctx.accounts.token_lottery.randomness_account = ctx.accounts.randomness_account.key();
 

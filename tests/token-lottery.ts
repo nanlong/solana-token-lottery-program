@@ -2,15 +2,11 @@ import * as anchor from '@coral-xyz/anchor';
 import * as sb from '@switchboard-xyz/on-demand';
 import { Program, BN } from '@coral-xyz/anchor';
 import { TokenLottery } from '../target/types/token_lottery';
-import {
-  ComputeBudgetProgram,
-  PublicKey,
-  TransactionInstruction,
-} from '@solana/web3.js';
+import { ComputeBudgetProgram, PublicKey } from '@solana/web3.js';
 import { confirmTransaction } from '@solana-developers/helpers';
 import { assert } from 'chai';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import SwitchboardIDL from '../tests/ondemand-idl.json';
+import SwitchboardIDL from '../tests/switchboard-idl.json';
 
 describe('token-lottery', () => {
   // Configure the client to use the local cluster.
@@ -112,7 +108,8 @@ describe('token-lottery', () => {
     });
 
     const createRandomnessSignature = await connection.sendTransaction(
-      createRandomnessTx
+      createRandomnessTx,
+      { skipPreflight: true }
     );
     await confirmTransaction(connection, createRandomnessSignature);
 
@@ -131,11 +128,13 @@ describe('token-lottery', () => {
       ixs: [commitIx, commitRandomnessIx],
       payer: wallet.publicKey,
       signers: [wallet.payer],
-      // computeUnitPrice: 75_000,
-      // computeUnitLimitMultiple: 1.3,
+      computeUnitPrice: 75_000,
+      computeUnitLimitMultiple: 1.3,
     });
 
-    const commitSignature = await connection.sendTransaction(commitTx);
+    const commitSignature = await connection.sendTransaction(commitTx, {
+      skipPreflight: true,
+    });
     await confirmTransaction(connection, commitSignature);
     console.log('commitSignature', commitSignature);
   });
