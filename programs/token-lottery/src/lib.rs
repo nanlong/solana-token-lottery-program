@@ -36,4 +36,9 @@ pub mod token_lottery {
         instructions::buy_ticket::handle(ctx)?;
         Ok(())
     }
+
+    pub fn commit_randomness(ctx: Context<CommitRandomness>) -> Result<()> {
+        instructions::commit_randomness::handle(ctx)?;
+        Ok(())
+    }
 }

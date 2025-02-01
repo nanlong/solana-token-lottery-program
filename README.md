@@ -17,3 +17,5 @@ anchor test --skip-local-validator
 ```
 
 https://developers.metaplex.com/token-metadata/collections
+
+[sb-randomness-on-demand](https://github.com/switchboard-xyz/sb-on-demand-examples/blob/main/sb-randomness-on-demand)

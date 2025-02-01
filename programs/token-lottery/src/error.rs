@@ -4,4 +4,10 @@ use anchor_lang::prelude::*;
 pub enum ErrorCode {
     #[msg("Lottery not open")]
     LotteryNotOpen,
+
+    #[msg("Not authorized")]
+    NotAuthorized,
+
+    #[msg("Randomness already revealed")]
+    RandomnessAlreadyRevealed,
 }
