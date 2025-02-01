@@ -160,6 +160,60 @@
       ]
     },
     {
+      "name": "oracle_init_svm",
+      "discriminator": [106, 20, 36, 117, 166, 175, 131, 83],
+      "accounts": [
+        {
+          "name": "oracle",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [79, 114, 97, 99, 108, 101] },
+              { "kind": "arg", "path": "params.queue" },
+              { "kind": "arg", "path": "params.source_oracle_key" }
+            ]
+          }
+        },
+        {
+          "name": "oracle_stats",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [79, 114, 97, 99, 108, 101, 83, 116, 97, 116, 115]
+              },
+              { "kind": "account", "path": "oracle" }
+            ]
+          }
+        },
+        { "name": "program_state", "writable": true },
+        { "name": "payer", "writable": true, "signer": true },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        { "name": "lut_signer" },
+        { "name": "lut", "writable": true },
+        {
+          "name": "address_lookup_table_program",
+          "address": "AddressLookupTab1e1111111111111111111111111"
+        },
+        { "name": "stake_program" },
+        { "name": "stake_pool" }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": { "defined": { "name": "OracleInitSVMParams" } }
+        }
+      ]
+    },
+    {
       "name": "oracle_set_configs",
       "discriminator": [129, 111, 223, 4, 191, 188, 70, 180],
       "accounts": [
@@ -426,49 +480,20 @@
       ]
     },
     {
-      "name": "pull_feed_submit_response_many_v2",
-      "discriminator": [135, 109, 121, 201, 47, 231, 8, 162],
-      "accounts": [
-        { "name": "queue" },
-        { "name": "program_state" },
-        {
-          "name": "recent_slothashes",
-          "address": "SysvarS1otHashes111111111111111111111111111"
-        },
-        { "name": "payer", "writable": true, "signer": true },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        },
-        { "name": "reward_vault", "writable": true },
-        {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-        },
-        {
-          "name": "token_mint",
-          "address": "So11111111111111111111111111111111111111112"
-        },
-        {
-          "name": "ix_sysvar",
-          "address": "Sysvar1nstructions1111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": { "name": "PullFeedSubmitResponseManyParamsV2" }
-          }
-        }
-      ]
-    },
-    {
-      "name": "pull_feed_submit_response_v2",
-      "discriminator": [80, 42, 8, 149, 217, 20, 176, 249],
+      "name": "pull_feed_submit_response_svm",
+      "discriminator": [123, 7, 190, 12, 220, 230, 198, 148],
       "accounts": [
         { "name": "feed", "writable": true },
-        { "name": "queue", "relations": ["feed"] },
+        {
+          "name": "queue",
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [81, 117, 101, 117, 101] },
+              { "kind": "arg", "path": "params.source_queue_key" }
+            ]
+          },
+          "relations": ["feed"]
+        },
         { "name": "program_state" },
         {
           "name": "recent_slothashes",
@@ -487,16 +512,12 @@
         {
           "name": "token_mint",
           "address": "So11111111111111111111111111111111111111112"
-        },
-        {
-          "name": "ix_sysvar",
-          "address": "Sysvar1nstructions1111111111111111111111111"
         }
       ],
       "args": [
         {
           "name": "params",
-          "type": { "defined": { "name": "PullFeedSubmitResponseParamsV2" } }
+          "type": { "defined": { "name": "PullFeedSubmitResponseSVMParams" } }
         }
       ]
     },
@@ -505,7 +526,7 @@
       "discriminator": [199, 255, 81, 50, 60, 133, 171, 138],
       "accounts": [
         { "name": "queue", "writable": true },
-        { "name": "authority", "signer": true, "relations": ["queue"] },
+        { "name": "authority", "signer": true },
         { "name": "program_authority" },
         { "name": "state" }
       ],
@@ -537,7 +558,8 @@
       "accounts": [
         { "name": "queue", "writable": true },
         { "name": "oracle", "writable": true },
-        { "name": "authority", "signer": true, "relations": ["queue"] }
+        { "name": "authority", "signer": true },
+        { "name": "state" }
       ],
       "args": [
         {
@@ -639,11 +661,100 @@
       ]
     },
     {
+      "name": "queue_init_svm",
+      "discriminator": [175, 94, 119, 151, 45, 144, 173, 235],
+      "accounts": [
+        {
+          "name": "queue",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [81, 117, 101, 117, 101] },
+              { "kind": "arg", "path": "params.source_queue_key" }
+            ]
+          }
+        },
+        {
+          "name": "queue_escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "account", "path": "queue" },
+              {
+                "kind": "const",
+                "value": [
+                  6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206,
+                  235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140,
+                  245, 133, 126, 255, 0, 169
+                ]
+              },
+              { "kind": "account", "path": "native_mint" }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        { "name": "authority" },
+        { "name": "payer", "writable": true, "signer": true },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "native_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        { "name": "program_state" },
+        { "name": "lut_signer", "writable": true },
+        { "name": "lut", "writable": true },
+        {
+          "name": "address_lookup_table_program",
+          "address": "AddressLookupTab1e1111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": { "defined": { "name": "QueueInitSVMParams" } }
+        }
+      ]
+    },
+    {
+      "name": "queue_override_svm",
+      "discriminator": [43, 103, 15, 35, 89, 14, 244, 165],
+      "accounts": [
+        { "name": "oracle", "writable": true },
+        { "name": "queue", "writable": true },
+        { "name": "authority", "signer": true },
+        { "name": "state" }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": { "defined": { "name": "QueueOverrideSVMParams" } }
+        }
+      ]
+    },
+    {
       "name": "queue_remove_mr_enclave",
       "discriminator": [3, 64, 135, 33, 190, 133, 68, 252],
       "accounts": [
         { "name": "queue", "writable": true },
-        { "name": "authority", "signer": true, "relations": ["queue"] },
+        { "name": "authority", "signer": true },
         { "name": "program_authority" },
         { "name": "state" }
       ],
@@ -875,6 +986,10 @@
   ],
   "events": [
     {
+      "name": "CostWhitelistEvent",
+      "discriminator": [56, 107, 191, 127, 116, 6, 138, 149]
+    },
+    {
       "name": "GarbageCollectionEvent",
       "discriminator": [232, 235, 2, 188, 8, 143, 145, 237]
     },
@@ -981,9 +1096,52 @@
     { "code": 6046, "name": "UnparsableAccount" },
     { "code": 6047, "name": "InvalidInstruction" },
     { "code": 6048, "name": "OracleAlreadyVerified" },
-    { "code": 6049, "name": "GuardianNotVerified" }
+    { "code": 6049, "name": "GuardianNotVerified" },
+    { "code": 6050, "name": "InvalidConstraint" },
+    { "code": 6051, "name": "InvalidDelegationGroup" },
+    { "code": 6052, "name": "OracleKeyNotFound" },
+    { "code": 6053, "name": "GuardianReregisterAttempt" }
   ],
   "types": [
+    {
+      "name": "CompactResult",
+      "serialization": "bytemuck",
+      "repr": { "kind": "c" },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "std_dev",
+            "docs": [
+              "The standard deviation of the submissions needed for quorom size"
+            ],
+            "type": "f32"
+          },
+          {
+            "name": "mean",
+            "docs": ["The mean of the submissions needed for quorom size"],
+            "type": "f32"
+          },
+          {
+            "name": "slot",
+            "docs": ["The slot at which this value was signed."],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CostWhitelistEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "feeds", "type": { "vec": "pubkey" } },
+          { "name": "oracles", "type": { "vec": "pubkey" } },
+          { "name": "values", "type": { "vec": { "vec": "i128" } } },
+          { "name": "reward", "type": "u32" }
+        ]
+      }
+    },
     {
       "name": "CurrentResult",
       "serialization": "bytemuck",
@@ -1034,7 +1192,14 @@
             "docs": ["The number of samples used to calculate this result"],
             "type": "u8"
           },
-          { "name": "padding1", "type": { "array": ["u8", 7] } },
+          {
+            "name": "submission_idx",
+            "docs": [
+              "The index of the submission that was used to calculate this result"
+            ],
+            "type": "u8"
+          },
+          { "name": "padding1", "type": { "array": ["u8", 6] } },
           {
             "name": "slot",
             "docs": ["The slot at which this value was signed."],
@@ -1085,7 +1250,7 @@
         "fields": [
           { "name": "timestamp", "type": "i64" },
           { "name": "mr_enclave", "type": { "array": ["u8", 32] } },
-          { "name": "idx", "type": "u32" },
+          { "name": "_reserved1", "type": "u32" },
           { "name": "ed25519_key", "type": "pubkey" },
           { "name": "secp256k1_key", "type": { "array": ["u8", 64] } },
           { "name": "slot", "type": "u64" },
@@ -1119,17 +1284,6 @@
     },
     {
       "name": "MultiSubmission",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          { "name": "values", "type": { "vec": "i128" } },
-          { "name": "signature", "type": { "array": ["u8", 64] } },
-          { "name": "recovery_id", "type": "u8" }
-        ]
-      }
-    },
-    {
-      "name": "MultiSubmissionV2",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1260,6 +1414,22 @@
       }
     },
     {
+      "name": "OracleInitSVMParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "recent_slot", "type": "u64" },
+          { "name": "authority", "type": "pubkey" },
+          { "name": "queue", "type": "pubkey" },
+          {
+            "name": "secp_authority",
+            "type": { "option": { "array": ["u8", 64] } }
+          },
+          { "name": "source_oracle_key", "type": "pubkey" }
+        ]
+      }
+    },
+    {
       "name": "OracleQuoteOverrideEvent",
       "type": {
         "kind": "struct",
@@ -1356,7 +1526,11 @@
             "docs": ["The slot at which this value was signed."],
             "type": "u64"
           },
-          { "name": "padding1", "type": { "array": ["u8", 8] } },
+          {
+            "name": "landed_at",
+            "docs": ["The slot at which this value was landed on chain."],
+            "type": "u64"
+          },
           {
             "name": "value",
             "docs": ["The value that was submitted."],
@@ -1369,7 +1543,7 @@
       "name": "OracleUpdateDelegationParams",
       "type": {
         "kind": "struct",
-        "fields": [{ "name": "recent_slot", "type": "u64" }]
+        "fields": [{ "name": "_reserved1", "type": "u64" }]
       }
     },
     {
@@ -1437,20 +1611,28 @@
           { "name": "max_variance", "type": "u64" },
           { "name": "min_responses", "type": "u32" },
           { "name": "name", "type": { "array": ["u8", 32] } },
-          { "name": "_padding1", "type": { "array": ["u8", 3] } },
+          { "name": "padding1", "type": { "array": ["u8", 1] } },
+          { "name": "permit_write_by_authority", "type": "u8" },
+          { "name": "historical_result_idx", "type": "u8" },
           { "name": "min_sample_size", "type": "u8" },
           { "name": "last_update_timestamp", "type": "i64" },
           { "name": "lut_slot", "type": "u64" },
-          { "name": "ipfs_hash", "type": { "array": ["u8", 32] } },
+          { "name": "_reserved1", "type": { "array": ["u8", 32] } },
           {
             "name": "result",
             "type": { "defined": { "name": "CurrentResult" } }
           },
           { "name": "max_staleness", "type": "u32" },
-          { "name": "_ebuf4", "type": { "array": ["u8", 20] } },
+          { "name": "padding2", "type": { "array": ["u8", 12] } },
+          {
+            "name": "historical_results",
+            "type": {
+              "array": [{ "defined": { "name": "CompactResult" } }, 32]
+            }
+          },
+          { "name": "_ebuf4", "type": { "array": ["u8", 8] } },
           { "name": "_ebuf3", "type": { "array": ["u8", 24] } },
-          { "name": "_ebuf2", "type": { "array": ["u8", 256] } },
-          { "name": "_ebuf1", "type": { "array": ["u8", 512] } }
+          { "name": "_ebuf2", "type": { "array": ["u8", 256] } }
         ]
       }
     },
@@ -1480,7 +1662,8 @@
           { "name": "recent_slot", "type": "u64" },
           { "name": "ipfs_hash", "type": { "array": ["u8", 32] } },
           { "name": "min_sample_size", "type": "u8" },
-          { "name": "max_staleness", "type": "u32" }
+          { "name": "max_staleness", "type": "u32" },
+          { "name": "permit_write_by_authority", "type": { "option": "bool" } }
         ]
       }
     },
@@ -1502,7 +1685,8 @@
             "type": { "option": { "array": ["u8", 32] } }
           },
           { "name": "min_sample_size", "type": { "option": "u8" } },
-          { "name": "max_staleness", "type": { "option": "u32" } }
+          { "name": "max_staleness", "type": { "option": "u32" } },
+          { "name": "permit_write_by_authority", "type": { "option": "bool" } }
         ]
       }
     },
@@ -1520,19 +1704,6 @@
       }
     },
     {
-      "name": "PullFeedSubmitResponseManyParamsV2",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          { "name": "slot", "type": "u64" },
-          {
-            "name": "submissions",
-            "type": { "vec": { "defined": { "name": "MultiSubmissionV2" } } }
-          }
-        ]
-      }
-    },
-    {
       "name": "PullFeedSubmitResponseParams",
       "type": {
         "kind": "struct",
@@ -1540,21 +1711,35 @@
           { "name": "slot", "type": "u64" },
           {
             "name": "submissions",
-            "type": { "vec": { "defined": { "name": "Submission" } } }
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "sb_on_demand::actions::pull_feed::pull_feed_submit_response_action::Submission"
+                }
+              }
+            }
           }
         ]
       }
     },
     {
-      "name": "PullFeedSubmitResponseParamsV2",
+      "name": "PullFeedSubmitResponseSVMParams",
       "type": {
         "kind": "struct",
         "fields": [
           { "name": "slot", "type": "u64" },
           {
             "name": "submissions",
-            "type": { "vec": { "defined": { "name": "SubmissionV2" } } }
-          }
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "sb_on_demand::actions::pull_feed::pull_feed_submit_response_svm_action::Submission"
+                }
+              }
+            }
+          },
+          { "name": "source_queue_key", "type": "pubkey" },
+          { "name": "queue_bump", "type": "u8" }
         ]
       }
     },
@@ -1734,6 +1919,34 @@
           { "name": "reward", "type": "u32" },
           { "name": "node_timeout", "type": "u32" },
           { "name": "recent_slot", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "QueueInitSVMParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "allow_authority_override_after", "type": "u32" },
+          { "name": "require_authority_heartbeat_permission", "type": "bool" },
+          { "name": "require_usage_permissions", "type": "bool" },
+          { "name": "max_quote_verification_age", "type": "u32" },
+          { "name": "reward", "type": "u32" },
+          { "name": "node_timeout", "type": "u32" },
+          { "name": "recent_slot", "type": "u64" },
+          { "name": "source_queue_key", "type": "pubkey" }
+        ]
+      }
+    },
+    {
+      "name": "QueueOverrideSVMParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "secp256k1_signer", "type": { "array": ["u8", 64] } },
+          { "name": "max_quote_verification_age", "type": "i64" },
+          { "name": "mr_enclave", "type": { "array": ["u8", 32] } },
+          { "name": "slot", "type": "u64" }
         ]
       }
     },
@@ -1948,7 +2161,11 @@
           { "name": "_ebuf4", "type": { "array": ["u8", 64] } },
           { "name": "_ebuf3", "type": { "array": ["u8", 128] } },
           { "name": "_ebuf2", "type": { "array": ["u8", 512] } },
-          { "name": "_ebuf1", "type": { "array": ["u8", 1024] } }
+          {
+            "name": "cost_whitelist",
+            "docs": ["Cost whitelist by authority"],
+            "type": { "array": ["pubkey", 32] }
+          }
         ]
       }
     },
@@ -1982,12 +2199,14 @@
           { "name": "switch_mint", "type": "pubkey" },
           { "name": "enable_staking", "type": "u8" },
           { "name": "subsidy_amount", "type": "u32" },
-          { "name": "base_reward", "type": "u32" }
+          { "name": "base_reward", "type": "u32" },
+          { "name": "add_cost_wl", "type": "pubkey" },
+          { "name": "rm_cost_wl", "type": "pubkey" }
         ]
       }
     },
     {
-      "name": "Submission",
+      "name": "sb_on_demand::actions::pull_feed::pull_feed_submit_response_action::Submission",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1999,14 +2218,13 @@
       }
     },
     {
-      "name": "SubmissionV2",
+      "name": "sb_on_demand::actions::pull_feed::pull_feed_submit_response_svm_action::Submission",
       "type": {
         "kind": "struct",
         "fields": [
           { "name": "value", "type": "i128" },
           { "name": "signature", "type": { "array": ["u8", 64] } },
-          { "name": "recovery_id", "type": "u8" },
-          { "name": "offset", "type": "u8" }
+          { "name": "recovery_id", "type": "u8" }
         ]
       }
     }

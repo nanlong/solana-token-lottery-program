@@ -13,10 +13,12 @@ pub struct RevealWinner<'info> {
         seeds = [b"token_lottery"],
         bump = token_lottery.bump,
     )]
-    pub token_lottery: Box<Account<'info, TokenLottery>>,
+    pub token_lottery: Account<'info, TokenLottery>,
 
     /// CHECK: This account is checked by the switchboard smart contract
-    pub randomness_account: UncheckedAccount<'info>,
+    pub randomness_account: AccountInfo<'info>,
+
+    pub system_program: Program<'info, System>,
 }
 
 pub(crate) fn handle(ctx: Context<RevealWinner>) -> Result<()> {

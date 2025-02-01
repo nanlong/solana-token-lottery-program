@@ -12,10 +12,10 @@ pub struct CommitRandomness<'info> {
         seeds = [b"token_lottery"],
         bump = token_lottery.bump,
     )]
-    pub token_lottery: Box<Account<'info, TokenLottery>>,
+    pub token_lottery: Account<'info, TokenLottery>,
 
     /// CHECK: This account is checked by the Switcboard smart contract
-    pub randomness_account: UncheckedAccount<'info>,
+    pub randomness_account: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
 }
@@ -37,6 +37,9 @@ pub(crate) fn handle(ctx: Context<CommitRandomness>) -> Result<()> {
         clock.slot - 1,
         ErrorCode::RandomnessAlreadyRevealed,
     );
+
+    msg!("Randomness seed slot: {}", randomness_data.seed_slot);
+    msg!("Clock slot: {}", clock.slot);
 
     ctx.accounts.token_lottery.randomness_account = ctx.accounts.randomness_account.key();
 
