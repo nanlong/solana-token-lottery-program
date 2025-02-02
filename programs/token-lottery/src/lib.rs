@@ -46,4 +46,9 @@ pub mod token_lottery {
         instructions::reveal_winner::handle(ctx)?;
         Ok(())
     }
+
+    pub fn claim_prize(ctx: Context<ClaimPrize>) -> Result<()> {
+        instructions::claim_prize::handle(ctx)?;
+        Ok(())
+    }
 }

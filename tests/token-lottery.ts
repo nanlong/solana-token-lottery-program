@@ -5,6 +5,7 @@ import { TokenLottery } from '../target/types/token_lottery';
 import {
   Commitment,
   ComputeBudgetProgram,
+  LAMPORTS_PER_SOL,
   PublicKey,
   TransactionInstruction,
 } from '@solana/web3.js';
@@ -71,8 +72,6 @@ describe('token-lottery', () => {
     );
 
     await confirmTransaction(connection, createRandomnessSignature);
-
-    console.log('createRandomnessSignature', createRandomnessSignature);
   });
 
   it('initialize config', async () => {
@@ -80,10 +79,16 @@ describe('token-lottery', () => {
     endSlot = slot + 20;
 
     const transactionSignature = await program.methods
-      .initializeConfig(new BN(slot), new BN(endSlot), new BN(1))
+      .initializeConfig(
+        new BN(slot),
+        new BN(endSlot),
+        new BN(1 * LAMPORTS_PER_SOL)
+      )
       .rpc(txOpts);
 
     await confirmTransaction(connection, transactionSignature);
+
+    console.log('initializeConfig', transactionSignature);
 
     const tokenLottery = PublicKey.findProgramAddressSync(
       [Buffer.from('token_lottery')],
@@ -96,7 +101,7 @@ describe('token-lottery', () => {
 
     assert(tokenLotteryAccount.startTime.eq(new BN(slot)));
     assert(tokenLotteryAccount.endTime.eq(new BN(endSlot)));
-    assert(tokenLotteryAccount.ticketPrice.eq(new BN(1)));
+    assert(tokenLotteryAccount.ticketPrice.eq(new BN(1 * LAMPORTS_PER_SOL)));
     assert(tokenLotteryAccount.authority.equals(provider.wallet.publicKey));
     assert(tokenLotteryAccount.randomnessAccount.equals(new PublicKey(0)));
   });
@@ -111,7 +116,7 @@ describe('token-lottery', () => {
 
     await confirmTransaction(connection, transactionSignature);
 
-    console.log(transactionSignature);
+    console.log('initializeLottery', transactionSignature);
   });
 
   it('buy ticket', async () => {
@@ -129,7 +134,7 @@ describe('token-lottery', () => {
 
     await confirmTransaction(connection, transactionSignature);
 
-    console.log(transactionSignature);
+    console.log('buyTicket', transactionSignature);
   });
 
   it('commit randomness', async () => {
@@ -154,7 +159,7 @@ describe('token-lottery', () => {
 
     const commitSignature = await connection.sendTransaction(commitTx, txOpts);
     await confirmTransaction(connection, commitSignature);
-    console.log('commitSignature', commitSignature);
+    console.log('commitRandomness', commitSignature);
   });
 
   it('reveal winner', async () => {
@@ -190,10 +195,19 @@ describe('token-lottery', () => {
     const revealSignature = await connection.sendTransaction(revealTx, txOpts);
     await confirmTransaction(connection, revealSignature);
 
-    console.log('revealSignature', revealSignature);
+    console.log('revealWinner', revealSignature);
+  });
+
+  it('claim prize', async () => {
+    const transactionSignature = await program.methods
+      .claimPrize()
+      .accounts({
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc(txOpts);
+
+    await confirmTransaction(connection, transactionSignature);
+
+    console.log('claimPrize', transactionSignature);
   });
 });
-
-async function sleep(secs: number) {
-  return new Promise((resolve) => setTimeout(resolve, secs * 1000));
-}

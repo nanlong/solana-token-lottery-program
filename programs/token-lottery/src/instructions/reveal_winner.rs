@@ -1,7 +1,6 @@
+use crate::{error::ErrorCode, TokenLottery};
 use anchor_lang::prelude::*;
 use switchboard_on_demand::RandomnessAccountData;
-
-use crate::{error::ErrorCode, TokenLottery};
 
 #[derive(Accounts)]
 pub struct RevealWinner<'info> {
@@ -50,6 +49,8 @@ pub(crate) fn handle(ctx: Context<RevealWinner>) -> Result<()> {
         .map_err(|_| ErrorCode::RandomnessNotResolved)?;
 
     let winner = reveal_random_value[0] as u64 % token_lottery.total_tickets;
+
+    msg!("Winner chosen: {}", winner);
 
     token_lottery.winner = winner;
     token_lottery.winner_chosen = true;

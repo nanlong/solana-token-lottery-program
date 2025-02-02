@@ -22,4 +22,16 @@ pub enum ErrorCode {
 
     #[msg("Randomness not resolved")]
     RandomnessNotResolved,
+
+    #[msg("Winner not chosen")]
+    WinnerNotChosen,
+
+    #[msg("Collection not verified")]
+    CollectionNotVerified,
+
+    #[msg("Incorrect ticket")]
+    IncorrectTicket,
+
+    #[msg("No ticket")]
+    NoTicket,
 }
