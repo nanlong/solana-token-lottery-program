@@ -1,16 +1,24 @@
+### 为脚本添加权限
+
+```bash
+cd setup
+chmod +x setup-local.sh
+chmod +x start-validator.sh
+```
+
 ### 生成程序文件
 
 ```bash
- solana program dump -um metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s tests/metaplex_token_metadata_program.so
+./setup-local.sh
 ```
 
 ### 执行本地测试节点
 
 ```bash
-solana-test-validator --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s tests/metaplex_token_metadata_program.so --reset
+./start-validator.sh
 ```
 
-### 执行测试
+### 新开一个终端执行测试
 
 ```bash
 anchor test --skip-local-validator
