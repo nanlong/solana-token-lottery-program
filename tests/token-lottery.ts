@@ -11,7 +11,7 @@ import {
 import { confirmTransaction } from '@solana-developers/helpers';
 import { assert } from 'chai';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import SwitchboardIDL from '../tests/switchboard.json';
+import SwitchboardIDL from '../tests/switchboard-idl.json';
 
 describe('token-lottery', () => {
   // Configure the client to use the local cluster.
