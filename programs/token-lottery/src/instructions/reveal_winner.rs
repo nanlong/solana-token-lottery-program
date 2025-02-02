@@ -16,7 +16,7 @@ pub struct RevealWinner<'info> {
     pub token_lottery: Account<'info, TokenLottery>,
 
     /// CHECK: This account is checked by the switchboard smart contract
-    pub randomness_account: AccountInfo<'info>,
+    pub randomness_account: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }

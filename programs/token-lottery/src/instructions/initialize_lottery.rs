@@ -25,7 +25,7 @@ pub struct InitializeLottery<'info> {
         mint::authority = collection_mint,
         mint::freeze_authority = collection_mint,
     )]
-    pub collection_mint: Box<InterfaceAccount<'info, Mint>>,
+    pub collection_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
@@ -35,7 +35,7 @@ pub struct InitializeLottery<'info> {
         token::mint = collection_mint,
         token::authority = collection_token_account,
     )]
-    pub collection_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub collection_token_account: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
         mut,

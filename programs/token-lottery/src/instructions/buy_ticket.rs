@@ -23,14 +23,14 @@ pub struct BuyTicket<'info> {
         seeds = [b"token_lottery"],
         bump = token_lottery.bump,
     )]
-    pub token_lottery: Box<Account<'info, TokenLottery>>,
+    pub token_lottery: Account<'info, TokenLottery>,
 
     #[account(
         mut,
         seeds = [b"collection_mint"],
         bump,
     )]
-    pub collection_mint: Box<InterfaceAccount<'info, Mint>>,
+    pub collection_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         mut,
@@ -69,7 +69,7 @@ pub struct BuyTicket<'info> {
         mint::freeze_authority = collection_mint,
         mint::token_program = token_program,
     )]
-    pub ticket_mint: Box<InterfaceAccount<'info, Mint>>,
+    pub ticket_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         mut,
@@ -105,7 +105,7 @@ pub struct BuyTicket<'info> {
         associated_token::authority = payer,
         associated_token::token_program = token_program,
     )]
-    pub destination: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub destination: InterfaceAccount<'info, TokenAccount>,
 
     pub token_program: Interface<'info, TokenInterface>,
 
