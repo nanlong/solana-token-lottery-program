@@ -21,6 +21,8 @@ chmod +x start-validator.sh
 ### 新开一个终端执行测试
 
 ```bash
+anchor build
+anchor keys sync
 anchor test --skip-local-validator
 ```
 

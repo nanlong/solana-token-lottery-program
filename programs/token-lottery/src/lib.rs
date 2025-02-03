@@ -11,7 +11,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("Fywhc4DK37TALzTR7gsyQZwyKEHAhE9btmt4hKvELzdx");
+declare_id!("9LzqYFW6Bx9D61fHicdnWgtjzwadHTGT2rFvuuSYkFM1");
 
 #[program]
 pub mod token_lottery {
